@@ -1,2 +1,2 @@
-let greet: string = 'Hello Jenkins from test_1 branch';
+let greet: string = 'Hello Jenkins main branch';
 console.log(greet);
