@@ -41,7 +41,7 @@ pipeline {
                     def gitDiffContent = readFile 'git_diff.txt'
 
                     // Define the API endpoint and headers
-                    def apiUrl = 'http://127.0.0.1:8000/generate_report'
+                    def apiUrl = 'https://f772ceee199cb6b0b0a8903595aa9d11.serveo.net/generate_report'
                     def headers = [
                         'Content-Type': 'text/plain',
                         // 'Authorization': "Bearer ${env.OPENAI_API_KEY}"
