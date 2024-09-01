@@ -43,7 +43,7 @@ pipeline {
                     // Define the API endpoint and headers
                     def apiUrl = 'https://f772ceee199cb6b0b0a8903595aa9d11.serveo.net/generate_report'
                     def headers = [
-                        'Content-Type': 'text/plain',
+                        [name: 'Content-Type', value: 'text/plain']
                         // 'Authorization': "Bearer ${env.OPENAI_API_KEY}"
                     ]
 
@@ -52,7 +52,7 @@ pipeline {
                         httpMode: 'POST',
                         url: apiUrl,
                         customHeaders: headers,
-                        requestBody: 'hello',
+                        requestBody: 'hello world',
                         validResponseCodes: '200:299'
                     )
 
