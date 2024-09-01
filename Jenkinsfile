@@ -38,12 +38,12 @@ pipeline {
             steps {
                 script {
                     // Read the content of git_diff.txt into a variable
-                    def gitDiffContent = readFile(file: 'git_diff.txt', encoding: 'ISO-8859-1')
+                    def gitDiffContent = readFile('git_diff.txt')
 
                     // Define the API endpoint and headers
                     def apiUrl = 'https://f772ceee199cb6b0b0a8903595aa9d11.serveo.net/generate_report'
                     def headers = [
-                        'Content-Type': 'application/octet-stream',
+                        'Content-Type': 'text/plain',
                         // 'Authorization': "Bearer ${env.OPENAI_API_KEY}"
                     ]
 
