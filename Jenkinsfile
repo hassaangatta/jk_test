@@ -51,8 +51,8 @@ pipeline {
                     def response = httpRequest(
                         httpMode: 'POST',
                         url: apiUrl,
-                        requestBody: gitDiffContent,
                         customHeaders: headers,
+                        requestBody: gitDiffContent,
                         validResponseCodes: '200:299'
                     )
 
