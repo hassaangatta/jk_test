@@ -1,2 +1,2 @@
-let string: greet_daily = 'Hello, Good Morning';
+let greet_daily : string= 'Hello, Good Morning';
 console.log(greet_daily);
