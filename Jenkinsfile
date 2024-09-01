@@ -52,7 +52,7 @@ pipeline {
                         httpMode: 'POST',
                         url: apiUrl,
                         customHeaders: headers,
-                        requestBody: gitDiffContent,
+                        requestBody: "${gitDiffContent}",
                         validResponseCodes: '200:299'
                     )
 
