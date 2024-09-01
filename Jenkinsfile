@@ -39,7 +39,7 @@ pipeline {
                 script {
                     // Read the content of git_diff.txt into a variable
                     def gitDiffContent = readFile('git_diff.txt')
-
+                    println gitDiffContent
                     // Define the API endpoint and headers
                     def apiUrl = 'https://f772ceee199cb6b0b0a8903595aa9d11.serveo.net/generate_report'
                     def headers = [
