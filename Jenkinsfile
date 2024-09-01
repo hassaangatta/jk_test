@@ -1,21 +1,73 @@
 pipeline {
     agent any
 
+    // environment{
+    //     OPENAI_API_KEY = credentials('OPENAI_API_KEY')
+    //     PYTHON_PATH = "C:\\Users\\rayyan.minhaj\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
+    // }
+
     stages {
-        stage('Build') {
+        stage('Prepare Environment') {
             steps {
-                echo 'Building..'
+                script {
+
+                    powershell 'gci env:\\ | ft name,value -autosize'
+                    
+                    powershell '& git config --add remote.origin.fetch +refs/heads/main:refs/remotes/origin/main'
+                    
+                    powershell '& git fetch --no-tags'
+                }
             }
         }
-        stage('Test') {
+
+        stage('Generate Git Diff') {
             steps {
-                echo 'Testing..'
+                script {
+                    // Perform a diff for .py files and save the output with the actual changes to a text file
+                    def diffOutput = powershell(returnStdout: true, script: '''
+                        git diff origin/main..origin/$env:GITHUB_PR_SOURCE_BRANCH > git_diff.txt
+                    ''').trim()
+
+                    // Archive the git diff output as an artifact
+                    archiveArtifacts artifacts: 'git_diff.txt', allowEmptyArchive: false
+                }
             }
         }
-        stage('Deploy') {
+
+        stage('Generate Report') {
             steps {
-                echo 'Deploying....'
+                script {
+                    // Read the content of git_diff.txt into a variable
+                    def gitDiffContent = readFile 'git_diff.txt'
+
+                    // Define the API endpoint and headers
+                    def apiUrl = 'http://127.0.0.1:8000/generate_report'
+                    def headers = [
+                        'Content-Type': 'text/plain',
+                        // 'Authorization': "Bearer ${env.OPENAI_API_KEY}"
+                    ]
+
+                    // Make the API call
+                    def response = httpRequest(
+                        httpMode: 'POST',
+                        url: apiUrl,
+                        requestBody: gitDiffContent,
+                        customHeaders: headers,
+                        validResponseCodes: '200:299'
+                    )
+
+                    // Save the API response to a file
+                    writeFile file: 'PR_Report.txt', text: response.content
+                }
             }
+        }
+
+        stage('Archive Reports'){
+            steps{
+                script{
+                    archiveArtifacts artifacts: 'git_diff.txt, PR_Report.txt', allowEmptyArchive: false
+                }
+            }           
         }
     }
 }
