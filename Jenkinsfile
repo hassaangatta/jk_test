@@ -41,7 +41,7 @@ pipeline {
                     def gitDiffContent = readFile('git_diff.txt')
                     println gitDiffContent.getClass()
                     // Define the API endpoint and headers
-                    def apiUrl = 'https://9d6e9d6f128aed.lhr.life/generate_report'
+                    def apiUrl = 'https://1dc354691c07e0.lhr.life/generate_report'
                     def headers = [
                         [name: 'Content-Type', value: 'text/plain']
                         // 'Authorization': "Bearer ${env.OPENAI_API_KEY}"
@@ -71,3 +71,16 @@ pipeline {
         }
     }
 }
+
+// withCredentials([string(credentialsId: GITHUB_CREDENTIALS_ID, variable: 'GITHUB_TOKEN')]) {
+//         def apiUrl = "https://api.github.com/repos/${GITHUB_REPO}/issues/${prNumber}/comments"
+//         def payload = [body: comment]
+//         def response = httpRequest(
+//             url: apiUrl,
+//             httpMode: 'POST',
+//             customHeaders: [[name: 'Authorization', value: "Bearer ${GITHUB_TOKEN}"]],
+//             contentType: 'APPLICATION_JSON',
+//             requestBody: groovy.json.JsonOutput.toJson(payload)
+//         )
+//         echo "Comment posted: ${response.status}"
+//     }
