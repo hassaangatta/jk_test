@@ -39,7 +39,7 @@ pipeline {
                 script {
                     // Read the content of git_diff.txt into a variable
                     def gitDiffContent = readFile('git_diff.txt')
-                    // println gitDiffContent
+                    println gitDiffContent.getClass()
                     // Define the API endpoint and headers
                     def apiUrl = 'https://b98c460256f2cd.lhr.life/generate_report'
                     def headers = [
