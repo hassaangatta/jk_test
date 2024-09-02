@@ -38,11 +38,11 @@ pipeline {
             steps {
                 script {
                     // Read the content of git_diff.txt into a variable
-                    def gitDiffContent = readFile('git_diff.txt').getBytes('UTF-8')
+                    def gitDiffContent = readFile('git_diff.txt')
                     def body = new String(gitDiffContent, 'UTF-8')
                     // println gitDiffContent
                     // Define the API endpoint and headers
-                    def apiUrl = 'https://127.0.0.1:8000/generate_report'
+                    def apiUrl = 'https://38c11d5a0a8fda.lhr.life/generate_report'
                     def headers = [
                         [name: 'Content-Type', value: 'text/plain']
                         // 'Authorization': "Bearer ${env.OPENAI_API_KEY}"
