@@ -39,7 +39,6 @@ pipeline {
                 script {
                     // Read the content of git_diff.txt into a variable
                     def gitDiffContent = readFile('git_diff.txt')
-                    def body = new String(gitDiffContent, 'UTF-8')
                     // println gitDiffContent
                     // Define the API endpoint and headers
                     def apiUrl = 'https://38c11d5a0a8fda.lhr.life/generate_report'
@@ -53,7 +52,7 @@ pipeline {
                         httpMode: 'POST',
                         url: apiUrl,
                         customHeaders: headers,
-                        requestBody: body,
+                        requestBody: gitDiffContent,
                         validResponseCodes: '200:299'
                     )
 
