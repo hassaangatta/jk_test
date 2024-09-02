@@ -39,6 +39,7 @@ pipeline {
                 script {
                     // Read the content of git_diff.txt into a variable
                     def gitDiffContent = readFile('git_diff.txt').getBytes('UTF-8')
+                    def body = new String(gitDiffContent, 'UTF-8')
                     // println gitDiffContent
                     // Define the API endpoint and headers
                     def apiUrl = 'https://8646eb4d7ba9295d33c8839a033a67bf.serveo.net/generate_report'
@@ -52,7 +53,7 @@ pipeline {
                         httpMode: 'POST',
                         url: apiUrl,
                         customHeaders: headers,
-                        requestBody: "${gitDiffContent}",
+                        requestBody: body,
                         validResponseCodes: '200:299'
                     )
 
