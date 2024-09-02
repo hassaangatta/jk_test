@@ -1,3 +1,3 @@
 let greet_daily : string = 'Hello, Good Morning';
-let num : int = 4;
+let num : float = 4.0;
 console.log(greet_daily);
