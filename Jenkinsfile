@@ -55,7 +55,7 @@ pipeline {
                         validResponseCodes: '200:299'
                     )
                     // Save the API response to a file
-                    writeFile file: 'PR_Report.txt', text: response.content
+                    writeFile file: 'PR_Report.txt', text: response.content[0]
                 }
             }
         }
