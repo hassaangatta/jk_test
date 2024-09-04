@@ -55,9 +55,8 @@ pipeline {
                         validResponseCodes: '200:299'
                     )
                     def content = response.content
-                    content = content.split("[\"")
-                    content = content[1].split("\"]")
-                    content = content[0].replaceAll(/\\n/, '\n').replaceAll(/\\"/, '"')
+                    content = content.replaceAll(/^\[\\"|"\]$/, '')
+                    content = content.replaceAll(/\\n/, '\n').replaceAll(/\\"/, '"')
                     // Save the API response to a file
                     writeFile file: 'PR_Report.txt', text: content
                 }
