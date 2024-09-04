@@ -54,8 +54,11 @@ pipeline {
                         requestBody: gitDiffContent,
                         validResponseCodes: '200:299'
                     )
+                    def content = response.content
+                    content = content.replaceAll(/^\[\\"|"\]$/, '')
+                    content = content.replaceAll(/\\n/, '\n').replaceAll(/\\"/, '"')
                     // Save the API response to a file
-                    writeFile file: 'PR_Report.txt', text: response.content[0]
+                    writeFile file: 'PR_Report.txt', text: content
                 }
             }
         }
