@@ -1,10 +1,11 @@
 pipeline {
     agent any
 
-    // environment{
+    environment{
     //     OPENAI_API_KEY = credentials('OPENAI_API_KEY')
+
     //     PYTHON_PATH = "C:\\Users\\rayyan.minhaj\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
-    // }
+    }
 
     stages {
         stage('Prepare Environment') {
@@ -41,7 +42,7 @@ pipeline {
                     def gitDiffContent = readFile('git_diff.txt')
                     println gitDiffContent.getClass()
                     // Define the API endpoint and headers
-                    def apiUrl = 'https://1dc354691c07e0.lhr.life/generate_report'
+                    def apiUrl = 'https://0110a8dc2efe98.lhr.life/generate_report'
                     def headers = [
                         [name: 'Content-Type', value: 'text/plain']
                         // 'Authorization': "Bearer ${env.OPENAI_API_KEY}"
@@ -55,7 +56,6 @@ pipeline {
                         requestBody: gitDiffContent,
                         validResponseCodes: '200:299'
                     )
-
                     // Save the API response to a file
                     writeFile file: 'PR_Report.txt', text: response.content
                 }
@@ -66,6 +66,16 @@ pipeline {
             steps{
                 script{
                     archiveArtifacts artifacts: 'git_diff.txt, PR_Report.txt', allowEmptyArchive: false
+                }
+            }           
+        }
+
+        stage('Commenting on Repository'){
+            steps{
+                script{
+                    def comment = readFile('PR_Report.txt')
+                    println "${env.GITHUB_PR_NUMBER}"
+                    println "${env.GIT_URL}"
                 }
             }           
         }
