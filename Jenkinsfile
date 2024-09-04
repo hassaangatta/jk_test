@@ -82,7 +82,7 @@ pipeline {
                         def response = httpRequest(
                             url: apiUrl,
                             httpMode: 'POST',
-                            customHeaders: [[name: 'Authorization', value: "Bearer $GITHUB_TOKEN"]],
+                            customHeaders: [[name: 'Authorization', value: "Bearer ${GITHUB_TOKEN}",maskValue: true]],
                             contentType: 'APPLICATION_JSON',
                             requestBody: groovy.json.JsonOutput.toJson(payload)
                         )
