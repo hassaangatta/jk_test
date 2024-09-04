@@ -73,7 +73,7 @@ pipeline {
                 script{
                     def comment = readFile('PR_Report.txt')
                     def url = env.GIT_URL
-                    def repo = url.tokenize('/').last()
+                    def repo = "${env.GITHUB_PR_SOURCE_REPO_OWNER}/" + url.tokenize('/').last()
                     println "${env.GITHUB_PR_NUMBER}"
                     println "${env.GIT_URL}"
                     withCredentials([string(credentialsId: GITHUB_CREDENTIALS_ID, variable:        'GITHUB_TOKEN')]) {
