@@ -40,7 +40,7 @@ pipeline {
                     def gitDiffContent = readFile('git_diff.txt')
                     println gitDiffContent.getClass()
                     // Define the API endpoint and headers
-                    def apiUrl = 'https://5a7a302460bc24.lhr.life/generate_report'
+                    def apiUrl = 'https://b066bd43d3ff68.lhr.life/generate_report'
                     def headers = [
                         [name: 'Content-Type', value: 'text/plain']
                         // 'Authorization': "Bearer ${env.OPENAI_API_KEY}"
