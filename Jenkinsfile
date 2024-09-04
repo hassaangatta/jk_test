@@ -1,11 +1,11 @@
 pipeline {
     agent any
 
-    environment{
-    //     OPENAI_API_KEY = credentials('OPENAI_API_KEY')
+    // environment{
+    // //     OPENAI_API_KEY = credentials('OPENAI_API_KEY')
 
-    //     PYTHON_PATH = "C:\\Users\\rayyan.minhaj\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
-    }
+    // //     PYTHON_PATH = "C:\\Users\\rayyan.minhaj\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
+    // }
 
     stages {
         stage('Prepare Environment') {
