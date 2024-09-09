@@ -1,0 +1,97 @@
+pipeline {
+    agent any
+
+    environment{
+        OPENAI_API_KEY = credentials('OPENAI_API_KEY')
+        PYTHON_PATH = "C:\\Users\\MY PC\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
+        GITHUB_TOKEN = credentials('8f667d5a-c940-4656-87da-fa5fcb8a8106')
+    }
+
+
+    stages {
+        stage('Get PR Author') {
+            steps {
+                script {
+                    withEnv(["PR_NUMBER=${env.GITHUB_PR_NUMBER}"]){ 
+                        def prAuthor = powershell(script: "& ${env.PYTHON_PATH} config_files/filter_users.py", returnStdout: true).trim()
+                        echo "PR Author: '${prAuthor}'"
+                        
+                        def approvedDevelopers = ['hassaangatta'] //List of approved developers
+                        
+                        if (!approvedDevelopers.contains(prAuthor)) {
+                            error("Pipeline stopped: Developer not approved.")
+                        }
+                    }   
+                }
+            }
+        }
+        stage('Generate Disclaimer'){
+            steps{
+                script{
+                    withEnv(["PR_NUMBER=${env.GITHUB_PR_NUMBER}"]){ //i found this from the gci env cmd
+                        powershell "& ${env.PYTHON_PATH} config_files/disclaimer.py"
+                    }  
+                }
+            }    
+        }
+        stage('Prepare Environment') {
+            steps {
+                script {
+
+                    powershell 'gci env:\\ | ft name,value -autosize'
+                    
+                    powershell '& git config --add remote.origin.fetch +refs/heads/main:refs/remotes/origin/main'
+                    
+                    powershell '& git fetch --no-tags'
+                }
+            }
+        }
+        stage('Generate Git Diff') {
+            steps {
+                script {
+                    // Perform a diff for .py files and save the output with the actual changes to a text file
+                    def diffOutput = powershell(returnStdout: true, script: '''
+                        git diff origin/main...origin/$env:GITHUB_PR_SOURCE_BRANCH -- *.py > git_diff.txt
+                    ''').trim()
+
+                    // Archive the git diff output as an artifact
+                    archiveArtifacts artifacts: 'git_diff.txt', allowEmptyArchive: false
+                }
+            }
+        }
+        stage('Generate Report'){
+            steps{
+                script{
+                    def reportOutput = powershell(script: "& ${env.PYTHON_PATH} config_files/generate_report.py git_diff.txt", returnStdout: true).trim()
+                    writeFile file: 'PR_Report.txt', text: reportOutput
+                }
+            }    
+        }
+        stage('Post PR Comment'){
+            steps{
+                script{
+                    withEnv(["PR_NUMBER=${env.GITHUB_PR_NUMBER}"]){ //i found this from the gci env cmd
+                        powershell "& ${env.PYTHON_PATH} config_files/post_comment_pr.py"
+                    }
+                }
+            }           
+        }
+        stage('Post Inline Comment'){
+            steps{
+                script{
+                    withEnv(["PR_NUMBER=${env.GITHUB_PR_NUMBER}", "GITHUB_PR_HEAD_SHA=${env.GITHUB_PR_HEAD_SHA}"]){
+                        def reportOutput = powershell(script: "& ${env.PYTHON_PATH} config_files/post_inline_comment_octokit.py git_diff.txt", returnStdout: true).trim()
+                        writeFile file: 'PR_Inline_Report.txt', text: reportOutput
+                    }
+                }
+            }           
+        }
+        stage('Archive Reports'){
+            steps{
+                script{
+                    archiveArtifacts artifacts: 'git_diff.txt, PR_Report.txt, PR_Inline_Report.txt', allowEmptyArchive: false
+                }
+            }           
+        }
+    }
+}
