@@ -14,7 +14,7 @@ def get_pr_author(repo_name, pr_number):
 
 if __name__ == "__main__":
 
-    repo_name = 'RayyanMinhaj/jenkins-demo'  
+    repo_name = 'hassaangatta/jk_test'  
     pr_number = int(os.getenv('GITHUB_PR_NUMBER'))  
     author = get_pr_author(repo_name, pr_number)
     print(author)
