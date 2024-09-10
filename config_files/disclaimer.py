@@ -6,6 +6,7 @@ g = Github(os.getenv('GITHUB_TOKEN'))
 repo = g.get_repo('hassaangatta/jk_test')
 
 pr_number = int(os.getenv('PR_NUMBER'))
+print(pr_number)
 pull_request = repo.get_pull(pr_number)
 
 disclaimer = """### Welcome to `SparklingCleanCode.com`, your automated AI PR Reviewing bot! 
