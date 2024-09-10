@@ -51,7 +51,7 @@ pipeline {
                 script {
                     // Perform a diff for .py files and save the output with the actual changes to a text file
                     def diffOutput = powershell(returnStdout: true, script: '''
-                        git diff origin/main...origin/$env:GITHUB_PR_SOURCE_BRANCH -- *.py > git_diff.txt
+                        git diff origin/main...origin/$env:GITHUB_PR_SOURCE_BRANCH > git_diff.txt
                     ''').trim()
 
                     // Archive the git diff output as an artifact
