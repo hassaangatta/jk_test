@@ -6,7 +6,7 @@ with open('PR_report.txt', 'r') as file:
 
 g = Github(os.getenv('GITHUB_TOKEN'))
 
-repo = g.get_repo('RayyanMinhaj/jenkins-demo')
+repo = g.get_repo('hassaangatta/jk_test')
 
 pr_number = int(os.getenv('PR_NUMBER'))
 pull_request = repo.get_pull(pr_number)

@@ -3,8 +3,8 @@ pipeline {
 
     environment{
         OPENAI_API_KEY = credentials('OPENAI_API_KEY')
-        PYTHON_PATH = "C:\\Users\\MY PC\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
-        GITHUB_TOKEN = credentials('8f667d5a-c940-4656-87da-fa5fcb8a8106')
+        PYTHON_PATH = "C:\\Users\\MY PC\\AppData\\Local\\Programs\\Python\\Python310\\python.exe"
+        GITHUB_TOKEN = credentials('GITHUB_TOKEN')
     }
 
 
@@ -76,20 +76,20 @@ pipeline {
                 }
             }           
         }
-        stage('Post Inline Comment'){
-            steps{
-                script{
-                    withEnv(["PR_NUMBER=${env.GITHUB_PR_NUMBER}", "GITHUB_PR_HEAD_SHA=${env.GITHUB_PR_HEAD_SHA}"]){
-                        def reportOutput = powershell(script: "& ${env.PYTHON_PATH} config_files/post_inline_comment_octokit.py git_diff.txt", returnStdout: true).trim()
-                        writeFile file: 'PR_Inline_Report.txt', text: reportOutput
-                    }
-                }
-            }           
-        }
+        // stage('Post Inline Comment'){
+        //     steps{
+        //         script{
+        //             withEnv(["PR_NUMBER=${env.GITHUB_PR_NUMBER}", "GITHUB_PR_HEAD_SHA=${env.GITHUB_PR_HEAD_SHA}"]){
+        //                 def reportOutput = powershell(script: "& ${env.PYTHON_PATH} config_files/post_inline_comment_octokit.py git_diff.txt", returnStdout: true).trim()
+        //                 writeFile file: 'PR_Inline_Report.txt', text: reportOutput
+        //             }
+        //         }
+        //     }           
+        // }
         stage('Archive Reports'){
             steps{
                 script{
-                    archiveArtifacts artifacts: 'git_diff.txt, PR_Report.txt, PR_Inline_Report.txt', allowEmptyArchive: false
+                    archiveArtifacts artifacts: 'git_diff.txt, PR_Report.txt', allowEmptyArchive: false
                 }
             }           
         }
