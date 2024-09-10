@@ -25,15 +25,6 @@ pipeline {
         //         }
         //     }
         // }
-        stage('Generate Disclaimer'){
-            steps{
-                script{
-                    withEnv(["PR_NUMBER=${env.GITHUB_PR_NUMBER}"]){ //i found this from the gci env cmd
-                        powershell "& ${env.PYTHON_PATH} config_files/disclaimer.py"
-                    }  
-                }
-            }    
-        }
         stage('Prepare Environment') {
             steps {
                 script {
@@ -45,6 +36,15 @@ pipeline {
                     powershell '& git fetch --no-tags'
                 }
             }
+        }
+        stage('Generate Disclaimer'){
+            steps{
+                script{
+                    withEnv(["PR_NUMBER=${env.GITHUB_PR_NUMBER}"]){ //i found this from the gci env cmd
+                        powershell "& ${env.PYTHON_PATH} config_files/disclaimer.py"
+                    }  
+                }
+            }    
         }
         stage('Generate Git Diff') {
             steps {
@@ -62,7 +62,9 @@ pipeline {
         stage('Generate Report'){
             steps{
                 script{
-                    def reportOutput = powershell(script: "& ${env.PYTHON_PATH} config_files/generate_report.py git_diff.txt", returnStdout: true).trim()
+                    withEnv(["OPENAI_API_KEY=${env.OPENAI_API_KEY}"]){
+                        def reportOutput = powershell(script: "& ${env.PYTHON_PATH} config_files/generate_report.py git_diff.txt", returnStdout: true).trim()
+                    }
                     writeFile file: 'PR_Report.txt', text: reportOutput
                 }
             }    
