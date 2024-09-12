@@ -13,7 +13,7 @@ github_token = os.getenv("GITHUB_TOKEN")
 client = Client(api_key=openai_key)
 g = Github(github_token)
 
-repo_name = 'RayyanMinhaj/jenkins-demo'
+repo_name = 'hassaangatta/jk_test'
 pr_number = int(os.getenv('PR_NUMBER'))
 commit_sha = os.getenv('GITHUB_PR_HEAD_SHA')
 
