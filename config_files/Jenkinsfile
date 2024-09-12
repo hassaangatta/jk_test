@@ -40,7 +40,7 @@ pipeline {
         stage('Generate Disclaimer'){
             steps{
                 script{
-                    sh """
+                    powershell """
                         docker exec -it python-scripts bash -c 'export GITHUB_TOKEN=$GITHUB_TOKEN && export PR_NUMBER=${env.GITHUB_PR_NUMBER} && python /app/disclaimer.py'
                     """
                 }
