@@ -59,16 +59,17 @@ pipeline {
                 }
             }
         }
-        // stage('Generate Report'){
-        //     steps{
-        //         script{
-        //             withEnv(["OPENAI_API_KEY=${env.OPENAI_API_KEY}"]){
-        //                 def reportOutput = powershell(script: "& ${env.PYTHON_PATH} config_files/generate_report.py git_diff.txt", returnStdout: true).trim()
-        //             }
-        //             writeFile file: 'PR_Report.txt', text: reportOutput
-        //         }
-        //     }    
-        // }
+        stage('Generate Report'){
+            steps{
+                script{
+                    def reportOutput = powershell(script: "& ${env.DOCKER_PATH} exec -i python-scripts bash -c 'export OPENAI_API_KEY=$OPENAI_API_KEY && python /app/generate_report.py git_diff.txt'", returnStdout: true).trim()
+                    // withEnv(["OPENAI_API_KEY=${env.OPENAI_API_KEY}"]){
+                    //     def reportOutput = powershell(script: "& ${env.PYTHON_PATH} config_files/generate_report.py git_diff.txt", returnStdout: true).trim()
+                    // }
+                    writeFile file: 'PR_Report.txt', text: reportOutput
+                }
+            }    
+        }
         // stage('Post PR Comment'){
         //     steps{
         //         script{
@@ -91,7 +92,7 @@ pipeline {
         stage('Archive Reports'){
             steps{
                 script{
-                    archiveArtifacts artifacts: 'git_diff.txt', allowEmptyArchive: false
+                    archiveArtifacts artifacts: 'git_diff.txt, PR_Report.txt', allowEmptyArchive: false
                 }
             }           
         }
