@@ -62,7 +62,7 @@ pipeline {
         stage('Generate Report'){
             steps{
                 script{
-                    def reportOutput = powershell(script: "'${env.DOCKER_PATH}' exec -i python-scripts bash -c 'export OPENAI_API_KEY=$OPENAI_API_KEY && python /app/generate_report.py git_diff.txt'", returnStdout: true).trim()
+                    def reportOutput = powershell(script: "& '${env.DOCKER_PATH}' exec -i python-scripts bash -c 'export OPENAI_API_KEY=$OPENAI_API_KEY && python /app/generate_report.py git_diff.txt'", returnStdout: true).trim()
                     // withEnv(["OPENAI_API_KEY=${env.OPENAI_API_KEY}"]){
                     //     def reportOutput = powershell(script: "& ${env.PYTHON_PATH} config_files/generate_report.py git_diff.txt", returnStdout: true).trim()
                     // }
