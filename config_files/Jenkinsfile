@@ -41,7 +41,7 @@ pipeline {
             steps{
                 script{
                     powershell """
-                        & '${env.DOCKER_PATH}' exec -it python-scripts bash -c 'export GITHUB_TOKEN=$GITHUB_TOKEN && export PR_NUMBER=${env.GITHUB_PR_NUMBER} && python /app/disclaimer.py'
+                        & '${env.DOCKER_PATH}' exec -i python-scripts bash -c 'export GITHUB_TOKEN=$GITHUB_TOKEN && export PR_NUMBER=${env.GITHUB_PR_NUMBER} && python /app/disclaimer.py'
                     """
                 }
             }    
