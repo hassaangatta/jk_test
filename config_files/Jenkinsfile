@@ -3,7 +3,7 @@ pipeline {
 
     environment{
         OPENAI_API_KEY = credentials('OPENAI_API_KEY')
-        PYTHON_PATH = "C:\\Users\\MY PC\\AppData\\Local\\Programs\\Python\\Python310\\python.exe"
+        DOCKER_PATH = "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe"
         GITHUB_TOKEN = credentials('GITHUB_TOKEN')
     }
 
@@ -41,7 +41,7 @@ pipeline {
             steps{
                 script{
                     powershell """
-                        docker exec -it python-scripts bash -c 'export GITHUB_TOKEN=$GITHUB_TOKEN && export PR_NUMBER=${env.GITHUB_PR_NUMBER} && python /app/disclaimer.py'
+                        & '${env.DOCKER_PATH}' exec -it python-scripts bash -c 'export GITHUB_TOKEN=$GITHUB_TOKEN && export PR_NUMBER=${env.GITHUB_PR_NUMBER} && python /app/disclaimer.py'
                     """
                 }
             }    
