@@ -66,22 +66,23 @@ pipeline {
                         & '${env.DOCKER_PATH}' cp '${env.WORKSPACE}\\git_diff.txt' python-scripts:/app/git_diff.txt
                     """
                     def reportOutput = powershell(script: "& '${env.DOCKER_PATH}' exec -i python-scripts bash -c 'export OPENAI_API_KEY=$OPENAI_API_KEY && python /app/generate_report.py /app/git_diff.txt'", returnStdout: true).trim()
-                    // withEnv(["OPENAI_API_KEY=${env.OPENAI_API_KEY}"]){
-                    //     def reportOutput = powershell(script: "& ${env.PYTHON_PATH} config_files/generate_report.py git_diff.txt", returnStdout: true).trim()
-                    // }
+                    
                     writeFile file: 'PR_Report.txt', text: reportOutput
                 }
             }    
         }
-        // stage('Post PR Comment'){
-        //     steps{
-        //         script{
-        //             withEnv(["PR_NUMBER=${env.GITHUB_PR_NUMBER}"]){ //i found this from the gci env cmd
-        //                 powershell "& ${env.PYTHON_PATH} config_files/post_comment_pr.py"
-        //             }
-        //         }
-        //     }           
-        // }
+        stage('Post PR Comment'){
+            steps{
+                script{
+                    powershell """
+                        & '${env.DOCKER_PATH}' cp '${env.WORKSPACE}\\PR_Report.txt' python-scripts:/app/PR_Report.txt
+                    """
+                    powershell """
+                        & '${env.DOCKER_PATH}' exec -i python-scripts bash -c 'export GITHUB_TOKEN=$GITHUB_TOKEN && export PR_NUMBER=${env.GITHUB_PR_NUMBER} && python /app/post_comment_pr.py'
+                    """
+                }
+            }           
+        }
         // stage('Post Inline Comment'){
         //     steps{
         //         script{
